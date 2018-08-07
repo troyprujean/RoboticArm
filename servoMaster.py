@@ -1,10 +1,17 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
-def SetAngle(angle, pin, servo):
+def SetAngle(angle, original, pin, servo):
     duty = angle / 18 + 2.5
+    dutyOriginal = original / 18 + 2.5
+    
     GPIO.output(pin, True)
-    servo.ChangeDutyCycle(duty)
+    
+    for i in range(duty):
+        dutyOriginal += 0.1
+        servo.ChangeDutyCycle(dutyOriginal)
+        sleep(0.1)
+        
     sleep(1.5)
     GPIO.output(pin, False)
     servo.ChangeDutyCycle(0)
@@ -30,7 +37,7 @@ arm.start(0) # Initialization
 #base.start(0)
 #SetAngle(180,baseServoPIN, base)
 
-SetAngle(20,armServoPIN, arm)
+SetAngle(20, 0, armServoPIN, arm)
 SetAngle(90,liftServoPIN, lift)
 SetAngle(65,armServoPIN, arm)
 SetAngle(50,liftServoPIN, lift)
