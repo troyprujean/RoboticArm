@@ -2,19 +2,18 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 def SetAngle(angle, original, pin, servo):
-    duty = angle / 18 + 2.5
-    dutyOriginal = original / 18 + 2.5
+    duty = angle / 18 + 2
+    dutyOriginal = original / 18 + 2
     
     GPIO.output(pin, True)
     
-    for i in range(duty):
-        dutyOriginal += 0.1
+    for x in range(int(duty)):
+        dutyOriginal += 1
         servo.ChangeDutyCycle(dutyOriginal)
-        sleep(0.1)
+        sleep(0.01)
         
     sleep(1.5)
     GPIO.output(pin, False)
-    servo.ChangeDutyCycle(0)
     
 gripServoPIN = 17
 baseServoPIN = 22
@@ -32,18 +31,22 @@ base = GPIO.PWM(baseServoPIN, 50) # GPIO 22 for PWM with 50Hz
 arm = GPIO.PWM(armServoPIN, 50)
 lift = GPIO.PWM(liftServoPIN, 50)
 
-lift.start(0)
-arm.start(0) # Initialization
-#base.start(0)
+#lift.start(0)
+#arm.start(0) # Initialization
+base.start(0)
+#grip.start(80)
+
 #SetAngle(180,baseServoPIN, base)
 
-SetAngle(20, 0, armServoPIN, arm)
-SetAngle(90,liftServoPIN, lift)
-SetAngle(65,armServoPIN, arm)
-SetAngle(50,liftServoPIN, lift)
-lift.stop()
-#base.stop()
-arm.stop()
+SetAngle(45, 0, baseServoPIN, base)
+SetAngle(90, 45, baseServoPIN, base)
+#SetAngle(90,liftServoPIN, lift)
+#SetAngle(65,armServoPIN, arm)
+#SetAngle(50,liftServoPIN, lift)
+#lift.stop()
+base.stop()
+#grip.stop()
+#arm.stop()
 GPIO.cleanup()
 GPIO.setwarnings(False)
 
